@@ -28,5 +28,6 @@ RUN cd /build/ruby-install-0.4.3 && \
 RUN cd /build/chruby-0.3.8 && \
   	make install
 
-ADD . /build
-ADD build.env /build.env
+ADD ./build_ruby.sh /build_ruby.sh
+
+ENTRYPOINT ["/build_ruby.sh"]

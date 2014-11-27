@@ -6,7 +6,6 @@ RUN apt-get update -y && \
     gem install prm --no-rdoc --no-ri && \
     pip install awscli
 
-ADD debs /debs
 ADD build.sh /build.sh
 
 CMD /build.sh

@@ -8,8 +8,7 @@ if [[ -f "$root/build.env" ]]; then
   source $root/build.env
 fi
 
-# bleh
-cp $root/build.env $root/ruby/base
+docker run --name dockages-builds -v /builds tianon/true || true
 
 cd $root/ruby
 bash build.sh

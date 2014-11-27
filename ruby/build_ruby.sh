@@ -2,21 +2,22 @@
 
 set -e
 
-if [[ -f "/build.env" ]]; then
-  source /build.env
-fi
-
 deb_basename=ruby
 deb_runtime_basename=ruby-runtime
+deb_output_dir=/builds/debs
+
 
 ruby_engine="$1"
 ruby_version="$2"
 ruby_full_version="$ruby_engine-$ruby_version"
 
+src_dir=/builds/$ruby_engine/$ruby_version
+
 install_path="/opt/rubies/$ruby_full_version"
 
 echo installing $ruby_full_version
-ruby-install $ruby_engine $ruby_version -i $install_path -- --enable-load-relative --disable-install-rdoc
+ruby-install $ruby_engine $ruby_version --src-dir $src_dir --install-dir $install_path -- --enable-load-relative --disable-install-rdoc
+
 
 source /usr/local/share/chruby/chruby.sh
 
@@ -32,9 +33,10 @@ EOF
 )
 gem install --install-dir="$INSTALL_DIR" --no-ri --no-rdoc -E bundler
 
-
 gem install fpm --no-rdoc --no-ri
 
+
+mkdir -p $deb_output_dir
 
 # full runtime version
 fpm -f -s dir \
@@ -43,7 +45,7 @@ fpm -f -s dir \
   -v $ruby_version$DEB_SUFFIX \
   -C $install_path \
   --prefix usr \
-  -p /$deb_runtime_basename-VERSION_ARCH.deb \
+  -p $deb_output_dir/$deb_runtime_basename-VERSION_ARCH.deb \
   -d "build-essential (> 0)" \
   -d "libxslt1-dev (> 0)" \
   -d "libxml2-dev (> 0)" \
@@ -66,7 +68,7 @@ fpm -f -s dir \
   -v $ruby_version$DEB_SUFFIX \
   -C $install_path \
   --prefix usr \
-  -p /$deb_basename-VERSION_ARCH.deb \
+  -p $deb_output_dir/$deb_basename-VERSION_ARCH.deb \
   -d "libxslt1.1 (> 0)" \
   -d "libxml2 (> 0)" \
   -d "libmysqlclient18 (> 0)" \
