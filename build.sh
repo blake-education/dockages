@@ -14,4 +14,4 @@ cd $root/ruby
 bash build.sh
 
 cd $root/repo
-bash redo.sh
+bash build.sh

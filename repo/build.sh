@@ -2,14 +2,14 @@
 
 set -e
 
-repo=/builds/repo
-dst=$repo/dists/production/main/binary-amd64/
+# I have this file from s3cmd (I think)
+# Paper over the differences:
+if [[ -f "$EC2_CREDENTIALS_FILE" ]]; then
+  source $EC2_CREDENTIALS_FILE
+  export AWS_ACCESS_KEY_ID="$AWSAccessKeyId"
+  export AWS_SECRET_ACCESS_KEY="$AWSSecretKey"
+fi
 
-rm -rf $repo
-mkdir -p $dst
 
-cp /builds/debs/*.deb $dst
-
-prm -t deb -p repo -r production -a amd64 -c main --nocache
-
-aws s3 sync --acl public-read --delete --region $APT_REGION $repo/ $APT_BUCKET
+docker build --rm -t dockages/ruby-repo .
+docker run --volumes-from dockages-builds -e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY -e APT_BUCKET -e APT_REGION dockages/ruby-repo
