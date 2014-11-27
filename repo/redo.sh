@@ -12,4 +12,4 @@ fi
 
 
 docker build --rm -t dockages/ruby-repo .
-docker run --volumes-from dockages-builds -e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY -e APT_BUCKET dockages/ruby-repo
+docker run --volumes-from dockages-builds -e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY -e APT_BUCKET -e APT_REGION dockages/ruby-repo
