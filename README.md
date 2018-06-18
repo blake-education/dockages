@@ -1,3 +1,5 @@
+This has now been moved to dockerfiles. This repo should not be used. 
+
 # dockages
 
 Use docker to build `.deb` packages and push them up to s3!
